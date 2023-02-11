@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+	<head>
+		<title></title>
+		<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css" />
+
+		<script src="../jquery/jquery-1.12.4.min.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script>
+		<script src="list.min.js"></script>
+	</head>
+	<body>
+		<br>
+		<div id="list" class="container" 
+		     data-list=""
+		     data-pagination="true"
+		     data-page=2
+		     data-names='[
+		        {"name": "Image", "attr": "src" },
+		        "Fullname", "Designation", "Description"
+		     ]'
+		     data-schema='[
+		        { "type": "image", "label": "Image" },
+		        { "type": "text", "label": "Fullname" },
+		        { "type": "text", "label": "Designation" },
+		        { "type": "textarea", "label": "Description" }
+		      ]'
+		     data-collection='[{
+		          "_id": 1,
+		          "Image": "assets/images/placeholder/placeholder_team_1.jpg",
+		          "Fullname": "Marry Dols",
+		          "Designation": "Manager of Tourism",
+		          "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt."
+		        }, {
+		          "_id": 2,
+		          "Image": "assets/images/placeholder/placeholder_team_2.jpg",
+		          "Fullname": "Mark Letto",
+		          "Designation": "Manager of Tourism",
+		          "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt."
+		        }, {
+		          "_id": 3,
+		          "Image": "assets/images/placeholder/placeholder_team_3.jpg",
+		          "Fullname": "Inna Kolt",
+		          "Designation": "Manager of Tourism",
+		          "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt."
+		        }]'>
+		  <div class="form-group">
+		    <input type="search" class="search form-control" placeholder="Search.." />
+		  </div>
+		  <div class="template hide">
+		    <div class="col-xs-12 col-sm-6">
+		      <div class="team-entry">
+		        <div class="image">
+		          <img class="team-img img-responsive Image" src="" alt="" />
+		        </div>
+		        <h3 class="team-name color-dark-2 Fullname"></h3>
+		        <h5 class="team-position color-dark-2-light Designation"></h5>
+		        <p class="color-dark-2-light Description"></p>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="list row"></div>
+		  <ul class="pagination"></ul>
+		</div>
+
+		<script>
+			$.each($('[data-list]'), function(elem) {
+			  var id = $(this).attr('id');
+			  var names = $(this).data('names');
+			  var template = $.trim($(this).find('.template').html());
+			  var page = $(this).data('page');
+			  var pagination = $(this).data('pagination');
+			  var data = $(this).data('collection');
+			  
+			  var options = {
+			    valueNames: names,
+			    item      : template,
+			    page      : page,
+			    pagination: pagination
+			  };
+
+			  var list = new List(id, options, data);
+			});
+		</script>
+	</body>
+</html>

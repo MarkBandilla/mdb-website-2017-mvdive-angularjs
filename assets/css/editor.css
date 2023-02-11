@@ -1,0 +1,90 @@
+body {
+  position: inherit !important;
+}
+.sidebar {
+  background: #f0f0f0;
+  float: left;
+  position: fixed;
+  height: 100%;
+  width: 300px;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+  box-shadow: 1px 0 5px rgba(0,0,0,.15);
+  transition: all .3s;
+}
+.sidebar.nav-open {
+  left: 0;
+}
+.sidebar.nav-close {
+  left: -300px;
+}
+.sidebar .btn-toggle {
+  position: absolute;
+  top: 0;
+  right: -25px;
+  border-radius: 0 5px 5px 0;
+  border: 1px solid #ddd;
+  border-left: none;
+  z-index: 99;
+  background: #f0f0f0;
+}
+.sidebar .btn-toggle span {
+  padding: 5px 7px;
+}
+.sidebar .tab-content {
+  background: white;
+  height: calc(100% - 40px);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-top: 0;
+  border-radius: 0 0 5px 5px;
+}
+.sidebar .tab-pane {
+  height: 100%;
+}
+.sidebar .list-container {
+  height: calc(100% - 55px);
+  overflow: auto;
+  margin-bottom: 20px;
+}
+.sidebar .list-group-item.active a {
+  color: white;
+}
+.sidebar .list-group-item a {
+  text-decoration: none;
+}
+
+.sidebar .list-group-item a:hover { /* sample pseudo */
+  font-weight: bold; 
+}
+.sidebar .list-group-item {
+  padding: 0 10px;
+}
+.sidebar .list-group-item a {
+  transition: all .0s;
+  font-size: 12px;
+}
+.sidebar .list-group-item:hover > .pull-right {
+  display: visible !important;
+}
+.main {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  padding: 10px 10px 10px 10px;
+}
+.nav-open .main {
+  padding-left: 310px;
+}
+.nav-close .main {
+  padding-left: 10px;
+}
+
+.nav-open .main .container, .opened-bfeditor-sidebar .main .container {
+  width: 100%;
+  padding: 0 50px;
+}
+
+.list-group li {
+  line-height: 30px;
+}

@@ -1,0 +1,107 @@
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form ng-submit="reserve(data)">
+				<input type="hidden" name="subject" ng-model="data.subject" value="Reservation" />
+				<div class="modal-body find-form bg-primary">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h2 class="ff_title">online reservation</h2>
+					<div class="ff_text">To check availability, kindly fill-out our form and our reservation team will send you a quotation</div>
+					<div ng-show="!reserved">
+						<div class="form-block clearfix">
+								<div class="form-label color-white">Fullname</div>
+								<div class="input-style-1">
+									<input type="text" name="fullname" ng-model="data.fullname" placeholder="Enter a your fullname" required>
+								</div>
+						</div>
+						<div class="form-block clearfix">
+								<div class="form-label color-white">E-mail Address</div>
+								<div class="input-style-1">
+									<input type="text" name="email" ng-model="data.email" placeholder="Enter a your e-mail address" required>
+								</div>
+						</div>
+						<div class="row">
+								<div class="col-xs-12 col-sm-6">
+										<div class="form-block clearfix">
+												<div class="form-label color-white">Check In</div>
+												<div class="input-style-1">
+														<img src="assets/images/icons/calendar_icon.png" alt="">
+														<input type="date" name="checkin" ng-model="data.checkin" placeholder="Mm/Dd/Yy" class="datepicker hasDatepicker" id="dp1499020126212" required>
+												</div>
+										</div>
+								</div>
+								<div class="col-xs-12 col-sm-6">
+										<div class="form-block clearfix">
+												<div class="form-label color-white">Check Out</div>
+												<div class="input-style-1">
+														<img src="assets/images/icons/calendar_icon.png" alt="">
+														<input type="date" name="checkout" ng-model="data.checkout" placeholder="Mm/Dd/Yy" class="datepicker hasDatepicker" id="dp1499020126213" required>
+												</div>
+										</div>
+								</div>
+						</div>
+						<div class="form-block clearfix">
+								<div class="form-label color-white">No. of Rooms</div>
+								<div class="input-style-1">
+									<input type="number" name="rooms" ng-model="data.rooms" placeholder="Enter number of rooms">
+								</div>
+						</div>
+					</div>
+
+					<div ng-show="reserved" class="well text-center">
+						<h3 style="color: black;">Reservation Complete!</h3>
+						<img src="assets/images/submitted.gif" style="width: 100%;" />
+					</div>
+				</div>
+				<div class="modal-footer" ng-show="!reserved">
+					<button type="button" class="c-button bg-white hover-primary" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="c-button btn-primary">SUBMIT &nbsp; <span class="fa fa-send"></span></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- HEADER -->
+<header id="Header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="nav">
+                    <a href="#" class="logo text-primary">
+						<img src="assets/images/logo/mvr-logo-small.png" />
+						<span class="hide"><b>MV</b>Dive</span>
+					</a>
+                    <div class="nav-menu-icon">
+                        <a href="#"><i></i></a>
+                    </div>
+                    <nav class="menu">
+                        <ul>
+							<li class="type-1" ng-repeat="page in pages" ng-if="page.type != 'view' && page.show != false">
+								<a href="#/{{page.link}}" ng-if="!page.sub">{{page.label}}</a>
+								<a href="" ng-if="page.sub">{{page.label}}</a>
+
+								<ul class="dropmenu" ng-if="page.sub">
+									<li ng-repeat="s in page.sub"><a href="#/{{s.link}}">{{s.label}}</a></li>
+								</ul>
+							</li>
+							<li class="type-1">
+								<a href="https://www.facebook.com/marcovincentdiveresort/"><span class="fa fa-facebook"></span></a>
+							</li>
+							<li class="type-1">
+								<a href="https://twitter.com/mvdiveresort"><span class="fa fa-twitter"></span></a>
+							</li>
+							<li class="type-1">
+								<a href="https://www.instagram.com/marco_vincent_dive_resort/"><span class="fa fa-instagram"></span></a>
+							</li>
+							<li class="type-2">
+								<a href="" class="btn" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#myModal">Reservation</a>
+							</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

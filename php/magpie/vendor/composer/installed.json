@@ -1,0 +1,44 @@
+[
+    {
+        "name": "flairlabs/magpie-php-sdk",
+        "version": "0.0.0",
+        "version_normalized": "0.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/flairlabs/magpie-php-sdk.git",
+            "reference": "845a8da3dfa60784cc3c9049ae7a4a60a3a4f02c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/flairlabs/magpie-php-sdk/zipball/845a8da3dfa60784cc3c9049ae7a4a60a3a4f02c",
+            "reference": "845a8da3dfa60784cc3c9049ae7a4a60a3a4f02c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5"
+        },
+        "time": "2016-10-30T10:58:48+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "MagpieApi\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jaime Hing III",
+                "email": "jaimehing@gmail.com"
+            }
+        ],
+        "description": "Magpie PHP SDK to allow developers to connect to Magpie REST APIs",
+        "homepage": "https://github.com/flairlabs/magpie-php-sdk",
+        "keywords": [
+            "magpie"
+        ]
+    }
+]

@@ -1,0 +1,442 @@
+<?php 
+
+session_start();
+
+$failed = false;
+
+if($_POST) {
+  if(($_POST['username'] === "mvdive") && ($_POST['password'] === "1nnovation")) {
+    $_SESSION["IS_LOGGED_IN"] = true;
+  } else {
+    $failed = true;
+  }
+}; 
+
+if (isset($_SESSION['LAST_ACTIVITY'])) {
+  if(time() - $_SESSION['LAST_ACTIVITY'] > 1800) {
+    session_unset();
+    session_destroy();
+  } 
+} else {
+  $_SESSION['LAST_ACTIVITY'] = time();  
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    
+    <title>WebDev</title>
+    <link rel="stylesheet" href="assets/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/lib/fontawesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="template/assets/css/theme.css" />
+
+    <link rel="stylesheet" href="assets/lib/toastr/toastr.min.css" />
+    <link rel="stylesheet" href="assets/lib/bfeditor/bfeditor-1.0.css" />
+    <link rel="stylesheet" href="assets/lib/bfeditor/bfeditor-components-1.0.css" />
+    <link rel="stylesheet" href="assets/lib/summernote/summernote.css" />
+    <link rel="stylesheet" href="assets/css/scroll-hack.css" />
+    <link rel="stylesheet" href="assets/css/editor.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <style>
+      .sidebar .nav.nav-tabs.nav-justified, #bfeditor-sidebar .nav.nav-tabs.nav-justified {
+        padding: 0;
+      }
+      .sidebar .tab-content, #bfeditor-sidebar .tab-content {
+        margin-top: -5px;
+      }
+      .bfe-modal .modal-body, .bfe-modal .modal-body .table {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+    </style>
+  </head>
+  <body class="nav-open">
+    <?php if((isset($_SESSION["IS_LOGGED_IN"])) && ($_SESSION["IS_LOGGED_IN"] == true)) { ?>
+
+    <!-- Modal -->
+    <div class="modal bfe-modal fade" id="mdl-db-editor" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Table Editor</h4>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="alert('Feature Disabled!'); // saveToFile();">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal bfe-modal fade" id="mdl-page-editor" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Page Editor</h4>
+          </div>
+          <form id="frm-page-editor">
+            <input type="hidden" name="action" value="" />
+            <input type="hidden" name="id" value="" />
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="mdl-record-editor" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Record Editor</h4>
+          </div>
+          <form id="frm-record">
+            <input type="hidden" name="db" value="" />
+            <input type="hidden" name="_id" value="" />
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onclick="saveToFile()">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal bfe-modal fade" id="mdl-richtext-editor" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Richtext Editor</h4>
+          </div>
+          <form id="frm-richtext">
+            <input type="hidden" name="dbId">
+            <input type="hidden" name="colId">
+            <input type="hidden" name="field">
+            <div class="modal-body">
+              <div id="summernote"><p>Start editing..</p></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default btn-close">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="main"></div>
+    <div class="sidebar nav-open">
+      <a href="#" class="btn-toggle">
+        <span class="fa fa-chevron-left"></span>
+      </a>
+
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs nav-justified" role="tablist">
+        <!-- <li>
+          <a href="#config" role="tab" data-toggle="tab">
+            <span class="fa fa-cog"></span>
+          </a>
+        </li> -->
+        <li class="active">
+          <a href="#page" role="tab" data-toggle="tab">
+            <span class="fa fa-file-o"></span>
+          </a>
+        </li>
+        <li>
+          <a href="#database" role="tab" data-toggle="tab">
+            <span class="fa fa-database"></span>
+          </a>
+        </li>
+        <!-- <li>
+          <a href="#files" role="tab" data-toggle="tab">
+            <span class="fa fa-file-image-o"></span>
+          </a>
+        </li> -->
+        <li>
+          <a href="#" onclick="saveToFile()">
+            <span class="fa fa-save"></span>
+          </a>
+        </li>
+      </ul>
+    
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane" id="config">
+          <div class="list-container">
+            <form>
+              <div class="form-group">
+                <label>Logo:</label>
+                <input type="file" class="form-control input-sm" placeholder="">
+              </div>
+              <div class="form-group">
+                <label>Title:</label>
+                <input type="text" class="form-control input-sm" placeholder="Title">
+              </div>
+              <div class="form-group">
+                <label>TagLine:</label>
+                <input type="text" class="form-control input-sm" placeholder="TagLine">
+              </div>
+              <div class="form-group">
+                <label>Description:</label>
+                <textarea class="form-control input-sm" placeholder="Short Description" rows="4"></textarea>
+              </div>
+              <div class="form-group">
+                <label>SEO Keywords:</label>
+                <textarea name="frKeywords" class="form-control" placeholder="keyword1, your keyword2, keyword3"></textarea>
+              </div>
+            </form>
+          </div>
+
+          <button class="btn btn-info btn-block" onclick="saveConfig()">
+            <span class="fa fa-check"></span> Update Config
+          </button>
+        </div>
+
+        <div class="tab-pane active" id="page">
+          <div class="list-container">
+
+            <!-- <ul class="list-group list-layout">
+              <li class="list-group-item">
+                <a href="#">Header</a>
+              </li>
+              <li class="list-group-item">
+                <a href="#">Footer</a>
+              </li>
+            </ul> -->
+
+            <ul class="list-group list-page">
+              <li class="list-group-item active">
+                <a href="#">Home</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-pencil"></span></button>
+                  <button class="btn btn-default btn-xs"><span class="fa fa-clone"></span></button>
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li>
+              <li class="list-group-item">
+                <a href="#">About</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-pencil"></span></button>
+                  <button class="btn btn-default btn-xs"><span class="fa fa-clone"></span></button>
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li>
+            </ul>
+
+            <ul class="list-group list-view">
+            </ul>
+          </div>
+
+          <button class="btn btn-primary btn-block" onclick="addPage()">
+            <span class="fa fa-plus"></span> Add Page
+          </button>
+        </div>
+
+        <div class="tab-pane" id="database">
+          <div class="list-container">
+            <ul class="list-group list-db">
+              <li class="list-group-item">
+                <a href="#">Blog</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-cog"></span></button>
+                  <button class="btn btn-default btn-xs"><span class="fa fa-clone"></span></button>
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li> 
+            </ul>
+          </div>
+
+          <button class="btn btn-success btn-block" onclick="addDB()">
+            <span class="fa fa-plus"></span> Add Collection
+          </button>
+        </div>
+
+        <div class="tab-pane" id="files">
+          <div class="list-container">
+            <div class="form-group">
+              <input type="search" class="form-control" placeholder="Search.." />
+            </div>
+
+
+
+            <ul class="list-group list-file">
+              <li class="list-group-item">
+                <a href="#"><span class="fa fa-folder-o"></span> <b>foldername</b></a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li> 
+              <li class="list-group-item">
+                <a href="#"><span class="fa fa-file-archive-o"></span> file.zip</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li> 
+              <li class="list-group-item">
+                <a href="#"><span class="fa fa-picture-o"></span> image.jpg</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li> 
+              <li class="list-group-item">
+                <a href="#"><span class="fa fa-file-video-o"></span> animated.gif</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li> 
+              <li class="list-group-item">
+                <a href="#"><span class="fa fa-video-camera"></span> video.mp4</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li> 
+              <li class="list-group-item">
+                <a href="#"><span class="fa fa-file-o"></span> unknown.file</a>
+                <span class="pull-right">
+                  <button class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                </span>
+              </li> 
+            </ul>
+          </div>
+
+          <div class="btn-group btn-group-justified" role="group">
+            <a href="" class="btn btn-default" onclick="createFolder()"><span class="fa fa-plus"></span> Add Folder</a>
+            <a href="" class="btn btn-info" onclick="uploadFile()"><span class="fa fa-cloud-upload"></span> File Upload</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="assets/lib/jquery/jquery-1.12.4.min.js"></script>
+    <script src="assets/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="assets/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+      $('.modal').modal({
+          backdrop: 'static',
+          keyboard: false  // to prevent closing with Esc button (if you want this too)
+      });
+      $('.modal').modal('hide');
+    </script>
+    <script src="assets/lib/jquery/jquery.nicescroll.min.js"></script>
+    <script src="assets/lib/listjs/list.min.js"></script>
+    <script src="assets/lib/toastr/toastr.min.js"></script>
+    <script>
+      toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }
+    </script>
+
+    <script src="assets/lib/filesaver/FileSaver.min.js"></script>
+    <script src="assets/lib/summernote/summernote.min.js"></script>
+    <script>
+      $('#summernote').summernote({
+        height: 300,                 // set editor height
+        minHeight: null,             // set minimum height of editor
+        maxHeight: 300,             // set maximum height of editor
+        focus: false                  // set focus to editable area after initializing summernote
+      });
+    </script>
+    <script src="assets/lib/bfeditor/bfeditor-extensions.min.js"></script>
+    <script src="assets/lib/bfeditor/bfeditor-1.0.min.js"></script>
+    <script src="assets/lib/bfeditor/bfeditor-components-1.0.min.js"></script>
+    <script>
+    var database = {
+      pages: [
+        { _id: 0, label: "Home", template: "" }, 
+        { _id: 2, label: "About", template: "" },
+        { _id: 3, label: "Contact", template: "" }, 
+      ],
+      currentPage: {}
+    }
+    </script>
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="d70xacokq0f2q84"></script>
+    <script src="app.db.js"></script>
+    <!-- <script src="template/assets/js/theme.js"></script> -->
+    <script src="assets/js/editor.min.js"></script>
+
+    <?php } else { ?>
+
+    <div class="container">
+      <br /><br /><br />
+      <div class="col-sm-6 col-sm-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+              </br />
+              <h2 class="text-center">
+                <strong>CMS Auth</strong>
+              </h2>
+              <br /><hr />
+              <form method="post">
+                <div class="form-group">
+                  <div class="input-group">
+                    <span class="input-group-addon input-lg"><i class="fa fa-user"></i></span>
+                    <input type="text" name="username" class="form-control input-lg" placeholder="Username" value="mvdive" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group">
+                    <span class="input-group-addon input-lg"><i class="fa fa-lock"></i></span>
+                    <input type="password" name="password" class="form-control input-lg" placeholder="Password" value="1nnovation" required>
+                  </div>
+                </div>
+                <?php if($failed) { ?>
+                <div id="alert-error" class="alert alert-danger bg-danger" style="background: red;" role="alert">
+                  <i class="fa fa-exclamation-circle"></i>
+                  <strong>Login Failed!</strong> Please try again
+                </div>
+                <?php } ?>
+                <br />
+                <button type="submit" class="btn btn-primary btn-block btn-lg">
+                  <i class="fa fa-unlock-alt"></i>
+                  LOG-IN
+                </button>
+              </form>
+            </div>
+        </div>
+        <br />
+        <div class="text-center text-muted">
+          MVDive Editor By: Mark Daniel Bandilla 2017
+        </div>
+        <br />
+        <br />
+      </div>
+    </div>
+
+    <?php } ?>
+  </body>
+</html>
